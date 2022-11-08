@@ -1,22 +1,20 @@
-#define DEFAULT_SPEED 200
-#define DEFAULT_ACCEL 100
+#define DEFAULT_SPEED 50
+#define DEFAULT_ACCEL 20
 #define ASYNC true
 #define BLOCKING false
 #define USEDEGREE true
 #define USESTEP false
 
-
 class Motor{
   public:
     AccelStepper stepper;
-    int group;
+    int group = -1;
 
     Motor(){
     }
     
-    Motor(int pul, int dir, int group){
+    Motor(int pul, int dir){
       stepper = AccelStepper(1, pul, dir); 
-      this->group = group;
     }
 
     void init(int speed = DEFAULT_SPEED, int accel = DEFAULT_ACCEL){
