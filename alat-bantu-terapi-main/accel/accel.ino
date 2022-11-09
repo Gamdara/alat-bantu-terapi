@@ -31,9 +31,9 @@ void moveGerakan(CommandParameter& p){
   for (int i = 0; i < listGerakan.Count(); i++)
   {
     if(kakiPilihan == KANAN){
-      kanan.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z);
+      kanan.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z, DEPAN, DEPAN, DEPAN);
     }else{
-      kiri.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z);
+      kiri.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z, DEPAN, DEPAN, DEPAN);
     }
   }
 }
@@ -66,7 +66,12 @@ void addGerakan(CommandParameter& p){
   int sudutPaha = p.NextParameterAsInteger();
   int sudutBetis = p.NextParameterAsInteger();
   int sudutTelapak = p.NextParameterAsInteger();
-  vec3_t v = { sudutPaha , sudutBetis , sudutTelapak }; 
+
+  int rotasiPaha = p.NextParameterAsInteger();
+  int rotasiBetis = p.NextParameterAsInteger();
+  int rotasiTelapak = p.NextParameterAsInteger();
+  
+  vec3_t v = { sudutPaha * rotasiPaha , sudutBetis * rotasiBetis , sudutTelapak * rotasiTelapak }; 
   listGerakan.Add(v);
   printGerakan();
 }

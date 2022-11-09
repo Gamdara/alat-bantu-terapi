@@ -24,7 +24,7 @@ class Kaki{
       }
     }
 
-    void move(float sudutPaha, float sudutBetis, float sudutTelapak){ 
+    void move(float sudutPaha, float sudutBetis, float sudutTelapak, int rotasiPaha = paha_rotation, int rotasiBetis = betis_rotation, int rotasiTelapak = telapak_rotation){ 
       //atur kecepatan setiap motor
       this->T.init(motor_speed, motor_accel);
       this->M.init(motor_speed * sudutBetis / sudutPaha, motor_accel * sudutBetis / sudutPaha);
