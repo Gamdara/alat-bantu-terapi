@@ -70,6 +70,15 @@ void addGerakan(CommandParameter& p){
   int rotasiPaha = p.NextParameterAsInteger();
   int rotasiBetis = p.NextParameterAsInteger();
   int rotasiTelapak = p.NextParameterAsInteger();
+  if(rotasiPaha == 0){
+    rotasiPaha = BELAKANG;
+  }
+  if(rotasiBetis == 0){
+    rotasiBetis = BELAKANG;
+  }
+  if(rotasiTelapak == 0){
+    rotasiTelapak = BELAKANG;
+  }
   
   vec3_t v = { sudutPaha * rotasiPaha , sudutBetis * rotasiBetis , sudutTelapak * rotasiTelapak }; 
   listGerakan.Add(v);
