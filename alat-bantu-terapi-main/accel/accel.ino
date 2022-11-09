@@ -1,5 +1,5 @@
 #include "Header.h"
-#include "Kaki.h"
+#include "KakiController.h"
 
 Kaki kanan{
   Motor(13,12),
@@ -12,100 +12,7 @@ Kaki kiri{
   Motor(5,4), 
   Motor(3,2) 
 };
-
-InterfacePanel Panel;
-
-void moveKaki(CommandParameter& p){
-  float sudutPaha = p.NextParameterAsInteger();
-  float sudutBetis = p.NextParameterAsInteger();
-  float sudutTelapak = p.NextParameterAsInteger();
-  Serial.println(kakiPilihan);
-  if(kakiPilihan == KANAN){
-    kanan.move(sudutPaha, sudutBetis,sudutTelapak);
-  }else{
-    kiri.move(sudutPaha, sudutBetis, sudutTelapak);
-  }
-}
-
-void moveGerakan(CommandParameter& p){
-  for (int i = 0; i < listGerakan.Count(); i++)
-  {
-    if(kakiPilihan == KANAN){
-      kanan.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z, DEPAN, DEPAN, DEPAN);
-    }else{
-      kiri.move(listGerakan[i].x,listGerakan[i].y,listGerakan[i].z, DEPAN, DEPAN, DEPAN);
-    }
-  }
-}
-
-void setKakiPilihan(CommandParameter& p){
-  kakiPilihan = p.NextParameterAsInteger();
-}
-
-void setKakiRotasi(CommandParameter& p){
-  paha_rotation = p.NextParameterAsInteger();
-  betis_rotation = p.NextParameterAsInteger();
-  telapak_rotation = p.NextParameterAsInteger();
-  if(paha_rotation == 0){
-    paha_rotation = BELAKANG;
-  }
-  if(betis_rotation == 0){
-    betis_rotation = BELAKANG;
-  }
-  if(telapak_rotation == 0){
-    telapak_rotation = BELAKANG;
-  }
-}
-
-void setSpeedAccel(CommandParameter& p){
-  motor_speed = p.NextParameterAsInteger();
-  motor_accel = p.NextParameterAsInteger();
-}
-
-void addGerakan(CommandParameter& p){
-  int sudutPaha = p.NextParameterAsInteger();
-  int sudutBetis = p.NextParameterAsInteger();
-  int sudutTelapak = p.NextParameterAsInteger();
-
-  int rotasiPaha = p.NextParameterAsInteger();
-  int rotasiBetis = p.NextParameterAsInteger();
-  int rotasiTelapak = p.NextParameterAsInteger();
-  if(rotasiPaha == 0){
-    rotasiPaha = BELAKANG;
-  }
-  if(rotasiBetis == 0){
-    rotasiBetis = BELAKANG;
-  }
-  if(rotasiTelapak == 0){
-    rotasiTelapak = BELAKANG;
-  }
-  
-  vec3_t v = { sudutPaha * rotasiPaha , sudutBetis * rotasiBetis , sudutTelapak * rotasiTelapak }; 
-  listGerakan.Add(v);
-  printGerakan();
-}
-
-void clearGerakan(CommandParameter& p){
-  listGerakan.RemoveRange(0, listGerakan.Count());
-}
-
-void setupCommands(){
-  SerialCmds.AddCommand(F("SetKakiPosisi"), moveKaki);
-  SerialCmds.AddCommand(F("SetKakiPilihan"),setKakiPilihan);
-  SerialCmds.AddCommand(F("SetRotasiKaki"), setKakiRotasi);
-  SerialCmds.AddCommand(F("SetSpeedAccel"), setSpeedAccel);
-  
-  SerialCmds.AddCommand(F("MoveGerakan"),moveGerakan);
-  SerialCmds.AddCommand(F("AddGerakan"), addGerakan);  
-  SerialCmds.AddCommand(F("ClearGerakan"), clearGerakan);  
-
-  Panel.SetListValue("PilihanKaki", kakiPilihan);
-  Panel.SetListValue("PahaRotasi", paha_rotation);
-  Panel.SetListValue("BetisRotasi", betis_rotation);
-  Panel.SetListValue("TelapakRotasi", telapak_rotation);
-  Panel.SetNumber("SpeedForm", motor_speed);
-  Panel.SetNumber("AccelForm", motor_accel);
-}
+void movementDefault();
 
 void setup()
 {  
@@ -121,10 +28,35 @@ void setup()
   kiri.T.init(DEFAULT_SPEED, DEFAULT_ACCEL);
   kiri.M.init(DEFAULT_SPEED, DEFAULT_ACCEL);
   kiri.B.init(DEFAULT_SPEED, DEFAULT_ACCEL);
+  megunoLink.setKaki(kanan, kiri);
+
+  pinMode(button, INPUT);
   Serial.println("Inisialisasi Selesai...");
 }
 
 void loop()
 { 
+  if(digitalRead(button)){
+    movementDefault();
+  }
   SerialCmds.Process();
+}
+
+void movementDefault(){
+    paha_rotation = DEPAN;
+    betis_rotation = BELAKANG;
+    telapak_rotation = BELAKANG;
+    
+    kanan.moveAuto(0,0,0);
+    kanan.moveAuto(35, 30, 13);
+    kanan.moveAuto(35, 0, 0);
+    kanan.moveAuto(35, 30, 13);
+    kanan.moveAuto(0,0,0);
+    delay(5000);
+    kiri.moveAuto(0,0,0);
+    kiri.moveAuto(35, 30, 13);
+    kiri.moveAuto(35, 0, 0);
+    kiri.moveAuto(35, 30, 13);
+    kiri.moveAuto(0,0,0);
+    delay(5000);
 }

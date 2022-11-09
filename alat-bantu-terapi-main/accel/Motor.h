@@ -40,7 +40,9 @@ class Motor{
     int mapDegree(int deg){
       return map(deg, 0, 360, 0, STEPS_PER_ROTATION) * 30;
     }
-
+    int mapSteps(int step){
+      return map(step,0, STEPS_PER_ROTATION, 0, 360) / 30;
+    }
     int getCurrentPosition(){
       return stepper.currentPosition();
     }
